@@ -1,0 +1,39 @@
+GDT: Gjort
+    Forteller CPU-en hvordan de forskjellige segmentene skal se ut:
+    
+    Felt	                Bits	        Beskrivelse
+    Limit	                0-15,  48-51    Angir hvor stort segmentet er (0x00000 – 0xFFFFF)
+    Base	                16-39, 56-63    Baseadresse for segmentet (hvor det starter i RAM)
+    Type	                40-43           Hva slags segment dette er (kode, data, system, osv.)
+    S (Descriptor Type)	    44	            1 = Kode/data, 0 = System
+    DPL (Privilege Level)	45-46	        Tilgangsnivå (0 = kjerne, 3 = bruker)
+    P (Present)	            47	            1 = Segmentet er aktivt
+    DB (Default Size)	    54	            0 = 16-bit, 1 = 32-bit
+    G (Granularity)	        55	            1 = 4KB pages, 0 = eksakt størrelse
+
+
+Video-porter:
+    Inline ASM: __asm__( "asm-instruks" : "Output" (C-variabel) : "Input" (C-variabel) );
+    Eksempel: __asm__( "in %%dx, %%al" : "=a" (result), : "d" (port));
+    Linjen utfører instruksen: "in dx, al" med det i "port"-variablen i "dx"-registeret
+    og returnerer til "result"-variablen hva enn som ender opp i "al"-registeret.
+    Man kan se at man bytter om input- og output-registeret.
+    Output skal alltid skrives med et "=" forran navnet: "=a". 
+    Navnet skal reflektere hvilket register: eax = "a", ebx = "b", osv
+
+    Screen-driver med funksjonene:
+        - printf(str)
+        - printf_at(str, x, y)
+        - clear_screen()
+
+IDT: 
+    Forteller CPU-en hvilken ISR-funksjon som en interupt skal kjøre:
+
+    Felt	            Biter	    Beskrivelse
+    Offset              0-15	    Lav 16-bit av ISR-adressen
+    Segment Selector    16-31	    Hvilket segment (CS) ISR ligger i
+    Gate Type	        40-43	    0xE = 32-bit interrupt gate, 0xF = 32-bit trap gate
+    S (Storage)	        44	        Må være 0 for interrupts
+    DPL (Privilege)	    45-46	    Hvem kan kalle den (0 = kjerne, 3 = bruker)
+    P (Present)	        47	        Må være 1 hvis valid
+    Offset              16-31	    48-63	Høy 16-bit av ISR-adressen
