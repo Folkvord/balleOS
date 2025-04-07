@@ -2,7 +2,10 @@
 #include "idt.h"
 #include "../util/util.h"
 #include "../util/types.h"
+#include "../drivers/ports.h"
 #include "../drivers/screen.h"
+
+isr interrupt_handlers[256];
 
 void isr_install(){
 
@@ -38,6 +41,36 @@ void isr_install(){
   set_idt_entry(29, (u32)isr29);
   set_idt_entry(30, (u32)isr30);
   set_idt_entry(31, (u32)isr31);
+
+  // Kartlegger PIC-en
+  port_byte_out(PIC1_COMMAND, 0x11);
+  port_byte_out(PIC2_COMMAND, 0x11);
+  port_byte_out(PIC1_DATA, 0x20);
+  port_byte_out(PIC2_DATA, 0x28);
+  port_byte_out(PIC1_DATA, 0x04);
+  port_byte_out(PIC2_DATA, 0x02);
+  port_byte_out(PIC1_DATA, 0x01);
+  port_byte_out(PIC2_DATA, 0x01);
+  port_byte_out(PIC1_DATA, 0x00);
+  port_byte_out(PIC2_DATA, 0x00);
+
+  // Installerer IRQ-ene
+  set_idt_entry(32, (u32)irq0);
+  set_idt_entry(33, (u32)irq1);
+  set_idt_entry(34, (u32)irq2);
+  set_idt_entry(35, (u32)irq3);
+  set_idt_entry(36, (u32)irq4);
+  set_idt_entry(37, (u32)irq5);
+  set_idt_entry(38, (u32)irq6);
+  set_idt_entry(39, (u32)irq7);
+  set_idt_entry(40, (u32)irq8);
+  set_idt_entry(41, (u32)irq9);
+  set_idt_entry(42, (u32)irq10);
+  set_idt_entry(43, (u32)irq11);
+  set_idt_entry(44, (u32)irq12);
+  set_idt_entry(45, (u32)irq13);
+  set_idt_entry(46, (u32)irq14);
+  set_idt_entry(47, (u32)irq15);
 
   set_idt();
 
@@ -82,7 +115,7 @@ char* exception_msg[] = {
   "Reserved"
 };
 
-void isr_handeler(registers r){
+void isr_handler(registers r){
 
   kprint("INTERUPT!!!\n");
   char str[3];
@@ -92,5 +125,22 @@ void isr_handeler(registers r){
   kprint("\n");
   kprint(exception_msg[r.int_no]);
   kprint("\n");
+
+}
+
+void register_interrupt_handler(u8 n, isr handler){
+  interrupt_handlers[n] = handler;
+}
+
+void irq_handler(registers r){
+
+  // Sender en EOI (End Of Interrupt) til PIC-ene
+  if(r.int_no >= 40) port_byte_out(PIC2_COMMAND, 0x20);
+  port_byte_out(PIC1_COMMAND, 0x20);
+
+  if(interrupt_handlers[r.int_no] != 0){
+    isr handler = interrupt_handlers[r.int_no];
+    handler(r);
+  }
 
 }
