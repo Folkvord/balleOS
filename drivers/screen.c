@@ -125,20 +125,27 @@ void fill_line(int y){
 }
 
 
-/*********************************************
- * Private kernel funksjoner                 *
- *********************************************/
+/*   * PRIVATE FUNKSJONER *   */
 
 /* Printer ut en char og oppdaterer offsettet */
 int print_char(char c, char attrib, int offset){
 
   if(offset > SCREEN_SIZE){
-
+    return offset;
+  }
+  if(offset == VIDEO_ADDRESS){
+    return offset;
   }
 
   if(c == '\n'){
     int y = get_offset_y(offset);
     offset = get_offset(0, y+1);
+  }
+  else if(c == '\b'){
+    int y = get_offset_y(offset);
+    int x = get_offset_x(offset);
+    offset = get_offset(x-1, y);
+    kprint_at(" ", x-1, y);
   }
   else if(c == '\t'){
     int y = get_offset_y(offset);
