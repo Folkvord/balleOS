@@ -1,8 +1,8 @@
 #ifndef UTIL
 #define UTIL
 
-void memcpy(char *src, char* dst, int n);
-void itoa(int target, char store[]);
-int strlen(char*);
+void itoa(int target, char* store);
+int atoi(char* str);
+void hex_str(int n, char* store);
 
 #endif 

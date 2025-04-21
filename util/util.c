@@ -1,19 +1,11 @@
 #include "util.h"
+#include "type.h"
+#include "string.h"
 #include "../drivers/screen.h"
 
-/* Kopierer n antall bytes fra src til dst */
-void memcpy(char *src, char *dst, int n){
-
-  int bytes = 0;
-  while(bytes < n){
-    *(dst + bytes) = *(src + bytes);
-    bytes++;
-  }
-
-}
 
 /* Oversetter et heltall (int) til ASCII */
-void itoa(int n, char str[]){
+void itoa(int n, char* str){
 
   // Sjekker om tallet er negativt
   int sign = n < 0;
@@ -41,10 +33,61 @@ void itoa(int n, char str[]){
 
 }
 
-int strlen(char* str){
+/* Oversetter et tall på stringformat til en int */
+int atoi(char* str){
 
   int i = 0;
-  while(str[i] != '\0') i++;
-  return i;
+  int sign = 1;  
+  if(str[i] == '-'){
+    sign = -1;
+    i++;
+  }
+
+  int n = 0;
+  while(str[i] != '\0'){
+    if(str[i] < '0' || str[i] > '9') return 0;
+    n = 10 * n + (str[i++] - '0');
+  }
+
+  return n * sign;
+
+}
+
+void hex_str(int n, char* store){
+
+  store[0] = '\0';
+  append(store, '0');
+  append(store, 'x');
+
+  u32 tmp;
+  int i = 28;
+  int leading_zero = 1;
+  while(i > 0){
+
+    tmp = (n >> i) & 0xf;
+    if(tmp == 0 && leading_zero){
+      i -= 4;
+      continue;
+    }
+
+    leading_zero = 0;
+    if(tmp <= 9){
+      append(store, (char) tmp + '0');
+    }
+    else{
+      append(store, (char) tmp - 10 + 'A');
+    }
+
+    i -= 4;
+
+  }
+
+  tmp = n & 0xf;
+  if(tmp <= 9){
+    append(store, (char) tmp + '0');
+  }
+  else{
+    append(store, (char) tmp - 10 + 'A');
+  }
 
 }
