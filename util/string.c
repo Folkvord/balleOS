@@ -1,27 +1,27 @@
 #include "string.h"
 
-/* strlen: Returnerer lengden på en string, eksluderende nullterminatoren */
+/* Returnerer lengden på en string, eksluderende nullterminatoren */
 int strlen(char* str){
   int i = 0;
   while(str[i] != '\0') i++;
   return i;
 }
 
-/* toupper: Tar en liten bokstav og returnerer den store versjonen av den.
+/* Tar en liten bokstav og returnerer den store versjonen av den.
   Hvis noe annet enn en bokstav sendes, retrurneres det tegnet. */
 char toupper(char c){
   if(c < 'a' || c > 'z') return c;
   return (c - 32);
 }
 
-/* tolower: Tar en stor bokstav og returnerer den lille versjonen av den
+/* Tar en stor bokstav og returnerer den lille versjonen av den
   Hvis noe annet enn en bokstav sendes, retrurneres det tegnet. */
 char tolower(char c){
   if(c < 'A' || c > 'Z') return c;
   return (c + 32);
 }
 
-/* strcmp: Sammenligner to stringer med hverandre. Om de er like returnerer den 0, hvis ikke: 1 */
+/* Sammenligner to stringer med hverandre. Om de er like returnerer den 0, hvis ikke: 1 */
 int strcmp(char* str1, char* str2){
   int i = 0;
   while(1){
@@ -31,20 +31,20 @@ int strcmp(char* str1, char* str2){
   }
 }
 
-/* append: Legger til et tegn i et buffer */
+/* Legger til et tegn i et buffer */
 void append(char* str, char c){
   int len = strlen(str);
   str[len] = c;
   str[len+1] = '\0';
 }
 
-/* pop: Fjerner det siste tegnet i et buffer */
+/* Fjerner det siste tegnet i et buffer */
 void pop(char* str){
   int len = strlen(str);
   str[len-1] = '\0';
 }
 
-/* purge: Klargjører et buffer */
+/* Klargjører et buffer */
 void purge(char* str){
   int len = strlen(str), i = 0;
   while(i < len){
