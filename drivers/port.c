@@ -1,5 +1,5 @@
-#include "ports.h"
-#include "../util/types.h"
+#include "port.h"
+#include "../util/type.h"
 
 /* Leser en byte fra I/O-porten lagret i dx og returnerer det */
 u8 port_byte_in(u16 port){

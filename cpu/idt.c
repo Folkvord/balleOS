@@ -1,5 +1,5 @@
 #include "idt.h"
-#include "../util/types.h"
+#include "../util/type.h"
 
 void set_idt_entry(int n, u32 offset){
 

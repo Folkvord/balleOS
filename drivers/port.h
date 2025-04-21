@@ -1,7 +1,7 @@
-#ifndef PORTS_DRIVER
-#define PORTS_DRIVER
+#ifndef PORT_DRIVER
+#define PORT_DRIVER
 
-#include "../util/types.h"
+#include "../util/type.h"
 
 u8 port_byte_in(u16 port);
 void port_byte_out(u16 port, u8 data);

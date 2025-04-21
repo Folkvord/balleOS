@@ -1,24 +1,24 @@
 #include "isr.h"
 #include "idt.h"
 #include "../util/util.h"
-#include "../util/types.h"
-#include "../drivers/ports.h"
+#include "../util/type.h"
+#include "../drivers/port.h"
 #include "../drivers/screen.h"
 
 isr interrupt_handlers[256];
 
 void isr_install(){
 
-  set_idt_entry(0, (u32)isr0);
-  set_idt_entry(1, (u32)isr1);
-  set_idt_entry(2, (u32)isr2);
-  set_idt_entry(3, (u32)isr3);
-  set_idt_entry(4, (u32)isr4);
-  set_idt_entry(5, (u32)isr5);
-  set_idt_entry(6, (u32)isr6);
-  set_idt_entry(7, (u32)isr7);
-  set_idt_entry(8, (u32)isr8);
-  set_idt_entry(9, (u32)isr9);
+  set_idt_entry(0,  (u32)isr0);
+  set_idt_entry(1,  (u32)isr1);
+  set_idt_entry(2,  (u32)isr2);
+  set_idt_entry(3,  (u32)isr3);
+  set_idt_entry(4,  (u32)isr4);
+  set_idt_entry(5,  (u32)isr5);
+  set_idt_entry(6,  (u32)isr6);
+  set_idt_entry(7,  (u32)isr7);
+  set_idt_entry(8,  (u32)isr8);
+  set_idt_entry(9,  (u32)isr9);
   set_idt_entry(10, (u32)isr10);
   set_idt_entry(11, (u32)isr11);
   set_idt_entry(12, (u32)isr12);
@@ -43,34 +43,34 @@ void isr_install(){
   set_idt_entry(31, (u32)isr31);
 
   // Kartlegger PIC-en
-  port_byte_out(PIC1_COMMAND, 0x11);
-  port_byte_out(PIC2_COMMAND, 0x11);
-  port_byte_out(PIC1_DATA, 0x20);
-  port_byte_out(PIC2_DATA, 0x28);
-  port_byte_out(PIC1_DATA, 0x04);
-  port_byte_out(PIC2_DATA, 0x02);
-  port_byte_out(PIC1_DATA, 0x01);
-  port_byte_out(PIC2_DATA, 0x01);
-  port_byte_out(PIC1_DATA, 0x00);
-  port_byte_out(PIC2_DATA, 0x00);
+  port_byte_out(PIC1_DATA, 0x11);
+  port_byte_out(PIC2_DATA, 0x11);
+  port_byte_out(PIC1_COMMAND, 0x20);
+  port_byte_out(PIC2_COMMAND, 0x28);
+  port_byte_out(PIC1_COMMAND, 0x04);
+  port_byte_out(PIC2_COMMAND, 0x02);
+  port_byte_out(PIC1_COMMAND, 0x01);
+  port_byte_out(PIC2_COMMAND, 0x01);
+  port_byte_out(PIC1_COMMAND, 0x0);
+  port_byte_out(PIC2_COMMAND, 0x0);
 
   // Installerer IRQ-ene
-  set_idt_entry(32, (u32)irq0);
-  set_idt_entry(33, (u32)irq1);
-  set_idt_entry(34, (u32)irq2);
-  set_idt_entry(35, (u32)irq3);
-  set_idt_entry(36, (u32)irq4);
-  set_idt_entry(37, (u32)irq5);
-  set_idt_entry(38, (u32)irq6);
-  set_idt_entry(39, (u32)irq7);
-  set_idt_entry(40, (u32)irq8);
-  set_idt_entry(41, (u32)irq9);
-  set_idt_entry(42, (u32)irq10);
-  set_idt_entry(43, (u32)irq11);
-  set_idt_entry(44, (u32)irq12);
-  set_idt_entry(45, (u32)irq13);
-  set_idt_entry(46, (u32)irq14);
-  set_idt_entry(47, (u32)irq15);
+  set_idt_entry(IRQ0,  (u32)irq0);
+  set_idt_entry(IRQ1,  (u32)irq1);
+  set_idt_entry(IRQ2,  (u32)irq2);
+  set_idt_entry(IRQ3,  (u32)irq3);
+  set_idt_entry(IRQ4,  (u32)irq4);
+  set_idt_entry(IRQ5,  (u32)irq5);
+  set_idt_entry(IRQ6,  (u32)irq6);
+  set_idt_entry(IRQ7,  (u32)irq7);
+  set_idt_entry(IRQ8,  (u32)irq8);
+  set_idt_entry(IRQ9,  (u32)irq9);
+  set_idt_entry(IRQ10, (u32)irq10);
+  set_idt_entry(IRQ11, (u32)irq11);
+  set_idt_entry(IRQ12, (u32)irq12);
+  set_idt_entry(IRQ13, (u32)irq13);
+  set_idt_entry(IRQ14, (u32)irq14);
+  set_idt_entry(IRQ15, (u32)irq15);
 
   set_idt();
 
@@ -135,8 +135,8 @@ void register_interrupt_handler(u8 n, isr handler){
 void irq_handler(registers r){
 
   // Sender en EOI (End Of Interrupt) til PIC-ene
-  if(r.int_no >= 40) port_byte_out(PIC2_COMMAND, 0x20);
-  port_byte_out(PIC1_COMMAND, 0x20);
+  if(r.int_no >= 40) port_byte_out(PIC2_DATA, 0x20);
+  port_byte_out(PIC1_DATA, 0x20);
 
   if(interrupt_handlers[r.int_no] != 0){
     isr handler = interrupt_handlers[r.int_no];

@@ -1,5 +1,5 @@
 #include "screen.h"
-#include "ports.h"
+#include "port.h"
 
 
 int print_char(char c, char attrib, int offset);
@@ -130,10 +130,7 @@ void fill_line(int y){
 /* Printer ut en char og oppdaterer offsettet */
 int print_char(char c, char attrib, int offset){
 
-  if(offset > SCREEN_SIZE){
-    return offset;
-  }
-  if(offset == VIDEO_ADDRESS){
+  if(offset > SCREEN_SIZE + VIDEO_ADDRESS){
     return offset;
   }
 
