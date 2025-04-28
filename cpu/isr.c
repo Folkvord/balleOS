@@ -9,8 +9,8 @@ isr interrupt_handlers[256];
 
 void isr_install(){
 
-  set_idt_entry(0,  (u32)isr0);
-  set_idt_entry(1,  (u32)isr1);
+  set_idt_entry(0,  (u32)isr0);   
+  set_idt_entry(1,  (u32)isr1);   
   set_idt_entry(2,  (u32)isr2);
   set_idt_entry(3,  (u32)isr3);
   set_idt_entry(4,  (u32)isr4);
@@ -55,8 +55,8 @@ void isr_install(){
   port_byte_out(PIC2_COMMAND, 0x0);
 
   // Installerer IRQ-ene
-  set_idt_entry(IRQ0,  (u32)irq0);
-  set_idt_entry(IRQ1,  (u32)irq1);
+  set_idt_entry(IRQ0,  (u32)irq0);    // Timer
+  set_idt_entry(IRQ1,  (u32)irq1);    // Keyboard
   set_idt_entry(IRQ2,  (u32)irq2);
   set_idt_entry(IRQ3,  (u32)irq3);
   set_idt_entry(IRQ4,  (u32)irq4);
@@ -69,7 +69,7 @@ void isr_install(){
   set_idt_entry(IRQ11, (u32)irq11);
   set_idt_entry(IRQ12, (u32)irq12);
   set_idt_entry(IRQ13, (u32)irq13);
-  set_idt_entry(IRQ14, (u32)irq14);
+  set_idt_entry(IRQ14, (u32)irq14);  // Page fault
   set_idt_entry(IRQ15, (u32)irq15);
 
   set_idt();
@@ -115,7 +115,7 @@ char* exception_msg[] = {
   "Reserved"
 };
 
-void isr_handler(registers r){
+void isr_handler(registers_t r){
 
   kprint("INTERUPT!!!\n");
   char str[3];
@@ -132,7 +132,7 @@ void register_interrupt_handler(u8 n, isr handler){
   interrupt_handlers[n] = handler;
 }
 
-void irq_handler(registers r){
+void irq_handler(registers_t r){
 
   // Sender en EOI (End Of Interrupt) til PIC-ene
   if(r.int_no >= 40) port_byte_out(PIC2_DATA, 0x20);

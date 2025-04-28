@@ -1,7 +1,6 @@
 #include "../util/type.h"
 #include "../util/util.h"
 #include "../util/string.h"
-#include "../drivers/screen.h"
 
 /* NOTER:
  * Dette systemet håndterer ikke 64-bit variabler 
@@ -31,7 +30,7 @@ typedef struct SMAP_entry{
 }__attribute__((packed)) SMAP_entry;
 
 SMAP_entry SMAP_entries[MAX_SMAP_ENTRIES];
-
+u32 ram_in_bytes = (u32)-1;
 
 /* Leser SMAP-oppføringene bootloaderen lagret */
 void read_SMAP(){
@@ -40,21 +39,17 @@ void read_SMAP(){
 
   char str[10];
   itoa(smap_entry_count, str);
-  kprint("Det fantes: ");
-  kprint(str);
-  kprint(" SMAP-oppforinger.\n");
-
+  
   int i = 0;
   int offset = 0;
-  char hex[10];
   while(i < smap_entry_count){
 
-    SMAP_entries[i].base_lower = *((u32*)((u8*)SMAP_ENTRY_ADDR + offset));
-    SMAP_entries[i].base_upper = *((u32*)((u8*)SMAP_ENTRY_ADDR + offset + 4));
-    SMAP_entries[i].length_lower = *((u32*)((u8*)SMAP_ENTRY_ADDR + offset + 8));
-    SMAP_entries[i].length_upper = *((u32*)((u8*)SMAP_ENTRY_ADDR + offset + 12));
-    SMAP_entries[i].type = *((u32*)((u8*)SMAP_ENTRY_ADDR + offset + 16));
-    SMAP_entries[i].ACPI = *((u32*)((u8*)SMAP_ENTRY_ADDR + offset + 20));
+    SMAP_entries[i].base_lower = *((u32*)(SMAP_ENTRY_ADDR + offset));
+    SMAP_entries[i].base_upper = *((u32*)(SMAP_ENTRY_ADDR + offset + 4));
+    SMAP_entries[i].length_lower = *((u32*)(SMAP_ENTRY_ADDR + offset + 8));
+    SMAP_entries[i].length_upper = *((u32*)(SMAP_ENTRY_ADDR + offset + 12));
+    SMAP_entries[i].type = *((u32*)(SMAP_ENTRY_ADDR + offset + 16));
+    SMAP_entries[i].ACPI = *((u32*)(SMAP_ENTRY_ADDR + offset + 20));
 
     offset += SMAP_ENTRY_SIZE;
     i++;
@@ -112,6 +107,8 @@ void SMAP_dump(){
 /* Returnerer antall ledige bytes i RAM */
 int get_available_ram_bytes(){
 
+  if(ram_in_bytes != (u32)-1) return ram_in_bytes;
+
   int smap_entry_count = *((u16*) SMAP_ENTRY_COUNT);
   int available_mem = 0;
 
@@ -143,6 +140,7 @@ int get_available_ram_bytes(){
 
   }
 
+  ram_in_bytes = available_mem;
   return available_mem;
 
 }

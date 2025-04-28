@@ -81,13 +81,13 @@ typedef struct {
   u32 edi, esi, ebp, esp, ebx, edx, ecx, eax;     // Registere pusha av "pusha"
   u32 int_no, err_code;                           // Interrupt nr og errorkode om nødvendig
   u32 eip, cs, eflags, useresp, ss;               // Register som blir pusha automatisk
-} registers;
+} registers_t;
 
 void ist_install();
-void isr_handler(registers r);
+void isr_handler(registers_t r);
 
-typedef void (*isr)(registers);
-void irq_handler(registers r);
+typedef void (*isr)(registers_t);
+void irq_handler(registers_t r);
 void register_interrupt_handler(u8 n, isr handler);
 
 #endif
