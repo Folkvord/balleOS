@@ -1,8 +1,9 @@
 #include "type.h"
 #include "mem.h"
 
+
 /* Kopierer n antall bytes fra src til dst */
-void memcpy(u8 *src, u8 *dst, u32 n){
+void memcpy(u32 *src, u32 *dst, u32 n){
 
     int bytes = 0;
     while(bytes < n){
@@ -12,7 +13,7 @@ void memcpy(u8 *src, u8 *dst, u32 n){
   
 }
 
-void memset(u8 *start_addr, u8 val, u32 len){
+void memset(u32 *start_addr, u32 val, u32 len){
 
   int bytes = 0;
   while(bytes < len){
@@ -22,12 +23,3 @@ void memset(u8 *start_addr, u8 val, u32 len){
 
 }
 
-int malloc(u32 size){
-  
-   
-
-}
-
-int bolloc(u32 size){
-  malloc(size);
-}
