@@ -46,12 +46,12 @@ const char shift_keys[128] = {
   0,   27, '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', '?', '`', '\b', 
 '\t', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', '^', '\n',
   0,  'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'O', 'E', '|',  0,
-'*', 'Z', 'X', 'C', 'V', 'B', 'N', 'm', ';', ':', '_',  0,  '*',  0, 0, ' ', 0,
+'*', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ';', ':', '_',  0,  '*',  0, 0, ' ', 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
 
-void keyboard_callback(registers r){
+void keyboard_callback(registers_t r){
   
   u8 scancode = port_byte_in(0x60);
   if(scancode >= KEYS_DEFINED) return;

@@ -6,7 +6,7 @@
 
 u32 tick = 0;
 
-static void timer_callback(registers r){
+static void timer_callback(registers_t r){
 
   tick++;
   char tick_str[256];
